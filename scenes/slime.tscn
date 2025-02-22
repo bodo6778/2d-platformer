@@ -1,10 +1,13 @@
-[gd_scene load_steps=12 format=3 uid="uid://c4slm6eo0y6ig"]
+[gd_scene load_steps=19 format=3 uid="uid://c4slm6eo0y6ig"]
 
 [ext_resource type="Script" path="res://scripts/slime.gd" id="1_gm0ah"]
 [ext_resource type="Texture2D" uid="uid://k5pukuuqxc13" path="res://assets/sprites/slime_green.png" id="1_xwuso"]
 [ext_resource type="PackedScene" uid="uid://dyy8h68qou17n" path="res://scenes/AttackComponent.tscn" id="4_pm4qm"]
 [ext_resource type="PackedScene" uid="uid://bt7ein262s3oe" path="res://scenes/HitboxComponent.tscn" id="4_qhcng"]
 [ext_resource type="PackedScene" uid="uid://l12f4efrck7b" path="res://scenes/HealthComponent.tscn" id="5_0bigc"]
+[ext_resource type="Script" path="res://scripts/state_machine.gd" id="6_yv37j"]
+[ext_resource type="Script" path="res://scripts/slime/enemy_idle.gd" id="7_k7v15"]
+[ext_resource type="Script" path="res://scripts/slime/enemy_hit.gd" id="8_kthpv"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p7pap"]
 atlas = ExtResource("1_xwuso")
@@ -21,6 +24,22 @@ region = Rect2(48, 24, 24, 24)
 [sub_resource type="AtlasTexture" id="AtlasTexture_rhxu6"]
 atlas = ExtResource("1_xwuso")
 region = Rect2(72, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y7co2"]
+atlas = ExtResource("1_xwuso")
+region = Rect2(0, 48, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_knyse"]
+atlas = ExtResource("1_xwuso")
+region = Rect2(24, 48, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uppnv"]
+atlas = ExtResource("1_xwuso")
+region = Rect2(48, 48, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lpnx0"]
+atlas = ExtResource("1_xwuso")
+region = Rect2(72, 48, 24, 24)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_g5fq8"]
 animations = [{
@@ -40,18 +59,38 @@ animations = [{
 "loop": true,
 "name": &"default",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y7co2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_knyse")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uppnv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lpnx0")
+}],
+"loop": false,
+"name": &"hit",
+"speed": 10.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_niij6"]
 size = Vector2(8, 11)
 
-[node name="Slime" type="Node2D"]
+[node name="Slime" type="Node2D" node_paths=PackedStringArray("state_machine")]
 script = ExtResource("1_gm0ah")
+state_machine = NodePath("StateMachine")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_g5fq8")
+animation = &"hit"
 autoplay = "default"
-frame_progress = 0.0805961
+frame = 3
+frame_progress = 1.0
 
 [node name="RayCastRight" type="RayCast2D" parent="."]
 position = Vector2(0, 6)
@@ -62,19 +101,38 @@ position = Vector2(0, 6)
 target_position = Vector2(-11, 0)
 
 [node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_qhcng")]
-collision_layer = 4
-collision_mask = 2
+collision_layer = 8
+collision_mask = 0
 health_component = NodePath("../HealthComponent")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+[node name="SlimeHitboxCollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
 position = Vector2(0, 5.5)
 shape = SubResource("RectangleShape2D_niij6")
 
 [node name="AttackComponent" parent="." instance=ExtResource("4_pm4qm")]
+collision_layer = 0
+collision_mask = 2
+ATTACK_DAMAGE_AMOUNT = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackComponent"]
+[node name="SlimeAttackCollisionShape2D" type="CollisionShape2D" parent="AttackComponent"]
 position = Vector2(0, 6)
 shape = SubResource("RectangleShape2D_niij6")
 
 [node name="HealthComponent" parent="." instance=ExtResource("5_0bigc")]
-MAX_HEALTH = 1
+MAX_HEALTH = 2
+
+[node name="StateMachine" type="Node2D" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("6_yv37j")
+initial_state = NodePath("EnemyIdle")
+
+[node name="EnemyIdle" type="Node" parent="StateMachine" node_paths=PackedStringArray("enemy_instance", "animated_sprite", "ray_cast_right", "ray_cast_left")]
+script = ExtResource("7_k7v15")
+enemy_instance = NodePath("../..")
+animated_sprite = NodePath("../../AnimatedSprite2D")
+ray_cast_right = NodePath("../../RayCastRight")
+ray_cast_left = NodePath("../../RayCastLeft")
+
+[node name="EnemyHit" type="Node" parent="StateMachine" node_paths=PackedStringArray("enemy_instance", "animated_sprite")]
+script = ExtResource("8_kthpv")
+enemy_instance = NodePath("../..")
+animated_sprite = NodePath("../../AnimatedSprite2D")

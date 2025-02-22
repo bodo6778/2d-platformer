@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://bmjvqrq8qq7lr"]
+[gd_scene load_steps=54 format=3 uid="uid://bmjvqrq8qq7lr"]
 
 [ext_resource type="Texture2D" uid="uid://cckwrbuncnfit" path="res://assets/sprites/knight.png" id="1_c7d26"]
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_ibnf2"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bt7ein262s3oe" path="res://scenes/HitboxComponent.tscn" id="3_brxx0"]
 [ext_resource type="PackedScene" uid="uid://l12f4efrck7b" path="res://scenes/HealthComponent.tscn" id="4_2o0re"]
 [ext_resource type="AudioStream" uid="uid://b0d7ds7vp6uh5" path="res://assets/sounds/jump.wav" id="4_qt0bi"]
+[ext_resource type="PackedScene" uid="uid://dyy8h68qou17n" path="res://scenes/AttackComponent.tscn" id="7_76w17"]
 [ext_resource type="Script" path="res://scripts/state_machine.gd" id="7_haygi"]
 [ext_resource type="Script" path="res://scripts/player/player_run.gd" id="7_ubgje"]
 [ext_resource type="Script" path="res://scripts/player/player_idle.gd" id="8_6q6gi"]
@@ -319,17 +320,17 @@ state_machine = NodePath("StateMachine")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_njgd6")
-animation = &"run"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -5)
-shape = SubResource("CircleShape2D_l7721")
+animation = &"attack"
+frame = 7
+frame_progress = 1.0
 
 [node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("3_brxx0")]
 position = Vector2(0, -5)
+collision_layer = 2
+collision_mask = 0
 health_component = NodePath("../HealthComponent")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+[node name="PlayerHitboxCollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
 shape = SubResource("CircleShape2D_l7721")
 
 [node name="HealthComponent" parent="." instance=ExtResource("4_2o0re")]
@@ -348,14 +349,27 @@ stream = ExtResource("4_qt0bi")
 volume_db = -2.055
 bus = &"SFX"
 
+[node name="AttackComponent" parent="." instance=ExtResource("7_76w17")]
+collision_layer = 0
+collision_mask = 0
+
+[node name="PlayerAttackCollisionShape2D" type="CollisionShape2D" parent="AttackComponent"]
+shape = SubResource("CircleShape2D_l7721")
+
+[node name="PlayerCollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -5)
+shape = SubResource("CircleShape2D_l7721")
+
 [node name="StateMachine" type="Node2D" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("7_haygi")
 initial_state = NodePath("PlayerIdle")
 
-[node name="PlayerAttack" type="Node" parent="StateMachine" node_paths=PackedStringArray("animated_sprite", "player")]
+[node name="PlayerAttack" type="Node" parent="StateMachine" node_paths=PackedStringArray("animated_sprite", "player", "hitbox_component", "attack_component")]
 script = ExtResource("13_hns8u")
 animated_sprite = NodePath("../../AnimatedSprite2D")
 player = NodePath("../..")
+hitbox_component = NodePath("../../HitboxComponent")
+attack_component = NodePath("../../AttackComponent")
 
 [node name="PlayerRun" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "animated_sprite")]
 script = ExtResource("7_ubgje")

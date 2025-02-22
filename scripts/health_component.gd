@@ -10,14 +10,13 @@ func _ready() -> void:
 func take_damage(damageAmount):
 	health -= damageAmount
 	var parent = get_parent()
-	
-	if (health == 0):
+	if (parent.hit):
+			parent.hit()
+	if (health <= 0):
 		if (parent.died):
 			parent.died()
-	else:
-		if (parent.hit):
-			parent.hit()
-	print(health)
+		
+	print("HealtCoponent:", parent, ":", health)
 	
 
 	

@@ -1,10 +1,10 @@
 extends CharacterBody2D
-
+class_name Player
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var audio_manager: Node2D = $AudioManager
 @onready var hurt_sound: AudioStreamPlayer2D = $AudioManager/HurtSound
-@onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
+@onready var collision_shape_2d: CollisionShape2D = $PlayerCollisionShape2D
 
 @export var state_machine : StateMachine
 

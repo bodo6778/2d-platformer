@@ -291,6 +291,7 @@ position_smoothing_enabled = true
 
 [node name="Killzone" parent="." instance=ExtResource("5_gu26u")]
 position = Vector2(-65, 97)
+collision_mask = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
 shape = SubResource("WorldBoundaryShape2D_ape0g")

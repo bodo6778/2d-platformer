@@ -1,0 +1,12 @@
+res://scenes/game.tscn
+res://scenes/player.tscn
+res://scenes/slime.tscn
+res://scripts/slime/enemy_idle.gd
+res://scripts/slime.gd
+res://scripts/slime/enemy_hit.gd
+res://scripts/health_component.gd
+res://scripts/attack_component.gd
+res://scripts/state_machine.gd
+res://scripts/player/player.gd
+res://scripts/player/player_attack.gd
+res://scripts/player/player_idle.gd
