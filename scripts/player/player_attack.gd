@@ -17,15 +17,14 @@ func _ready() -> void:
 	animated_sprite.animation_finished.connect(_on_animation_done)
 
 func enter() -> void:
+	animated_sprite.play("attack")
 	if animated_sprite.flip_h:
 		direction = -1
 	else:
 		direction = 1
-	animated_sprite.play("attack")
 	player.velocity.x = direction * SPEED
 	hitbox_component.set_collision_layer_value(2, false)
 	attack_component.set_collision_mask_value(4, true)
-	
 	
 
 func physics_update(delta):

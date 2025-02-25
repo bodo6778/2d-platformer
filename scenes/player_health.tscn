@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3 uid="uid://x4b475ajqgar"]
+
+[ext_resource type="Script" path="res://scripts/player_health_ui.gd" id="1_514sp"]
+[ext_resource type="Texture2D" uid="uid://c2vq6m6h6v3sw" path="res://assets/sprites/Hearts_Red_1.png" id="1_mdijs"]
+[ext_resource type="Texture2D" uid="uid://becu20dbu3gw4" path="res://assets/sprites/Hearts_Red_5.png" id="2_8pmdq"]
+
+[node name="PlayerHealth" type="HBoxContainer"]
+offset_right = 56.0
+offset_bottom = 24.0
+scale = Vector2(1, 0.56)
+script = ExtResource("1_514sp")
+
+[node name="FullHeart" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_mdijs")
+
+[node name="FullHeart1" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_mdijs")
+
+[node name="FullHeart2" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_mdijs")
+
+[node name="FullHeart3" type="TextureRect" parent="."]
+visible = false
+layout_mode = 2
+texture = ExtResource("1_mdijs")
+
+[node name="EmptyHeart" type="TextureRect" parent="."]
+visible = false
+layout_mode = 2
+texture = ExtResource("2_8pmdq")
+
+[node name="EmptyHeart1" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("2_8pmdq")
+
+[node name="EmptyHeart2" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("2_8pmdq")
+
+[node name="EmptyHeart3" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("2_8pmdq")

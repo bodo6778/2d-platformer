@@ -310,11 +310,13 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_l7721"]
 radius = 5.0
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("state_machine")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("collision_shape_2d", "health_component", "state_machine")]
 z_index = 5
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_ibnf2")
+collision_shape_2d = NodePath("PlayerCollisionShape2D")
+health_component = NodePath("HealthComponent")
 state_machine = NodePath("StateMachine")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -334,7 +336,6 @@ health_component = NodePath("../HealthComponent")
 shape = SubResource("CircleShape2D_l7721")
 
 [node name="HealthComponent" parent="." instance=ExtResource("4_2o0re")]
-MAX_HEALTH = 10
 
 [node name="AudioManager" type="Node2D" parent="."]
 metadata/HurtSound = NodePath("HurtSound")
@@ -354,6 +355,8 @@ collision_layer = 0
 collision_mask = 0
 
 [node name="PlayerAttackCollisionShape2D" type="CollisionShape2D" parent="AttackComponent"]
+position = Vector2(0, -5)
+scale = Vector2(2, 2)
 shape = SubResource("CircleShape2D_l7721")
 
 [node name="PlayerCollisionShape2D" type="CollisionShape2D" parent="."]

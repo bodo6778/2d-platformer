@@ -1,7 +1,10 @@
 extends Node
 
+@export var player : Player
+
 var score = 0
-var health = 3
+#var health = player.health_component.health
+var health = 4
 @onready var score_label: Label = $ScoreLabel
 
 func add_point():
